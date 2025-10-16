@@ -1,0 +1,2380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snap Bet - Bet Smarter ⚡</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #0099ff;
+            --accent: #ff3366;
+            --dark: #0f172a;
+            --darker: #0a0f1c;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --glow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+
+        /* Page container and transitions */
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--darker);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        header.hidden {
+            transform: translateY(-100%);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo i {
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: var(--light);
+            border: 1px solid var(--gray);
+        }
+
+        .btn-signup {
+            background: var(--gradient);
+            color: var(--darker);
+            box-shadow: var(--glow);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .hamburger {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 80vh;
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), 
+                        url('https://images.unsplash.com/photo-1551833726-c8266c5780d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 1rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--gray);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-hero {
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background: var(--gradient);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* Featured Matches */
+        .matches-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .match-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .match-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient);
+        }
+
+        .match-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 40%;
+        }
+
+        .team-logo {
+            width: 60px;
+            height: 60px;
+            background: var(--darker);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .vs {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .match-info {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--gray);
+        }
+
+        .odds {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .odd-btn {
+            background: var(--darker);
+            border: none;
+            color: var(--light);
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            margin: 0 0.25rem;
+        }
+
+        .odd-btn:hover {
+            background: var(--gradient);
+            color: var(--darker);
+            box-shadow: var(--glow);
+        }
+
+        /* Promotions */
+        .promotions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .promo-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .promo-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .promo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            opacity: 0.05;
+            z-index: -1;
+        }
+
+        .promo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .promo-badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .countdown {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            justify-content: center;
+        }
+
+        .countdown-item {
+            background: var(--darker);
+            padding: 0.5rem;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .countdown-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .countdown-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+        }
+
+        /* Enhanced Promotions with Images */
+        .promo-card-image {
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            color: white;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2rem;
+        }
+
+        .promo-card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 0;
+        }
+
+        .promo-card-image > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .promo-card-image .promo-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .promo-card-image .promo-badge {
+            background: var(--accent);
+        }
+
+        .promo-card-image p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Live Matches */
+        .live-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .live-table th, .live-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .live-table th {
+            background: var(--darker);
+            font-weight: 600;
+        }
+
+        .live-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .live-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .live-badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            animation: pulse 2s infinite;
+        }
+
+        /* Sports Betting Page */
+        .sports-layout {
+            display: flex;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .sports-sidebar {
+            width: 250px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .sports-categories {
+            list-style: none;
+        }
+
+        .sports-categories li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sports-categories li:hover {
+            background: var(--darker);
+            transform: translateX(5px);
+        }
+
+        .sports-categories li.active {
+            background: var(--darker);
+            border-left: 4px solid var(--primary);
+        }
+
+        .sports-categories i {
+            margin-right: 0.8rem;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sports-main {
+            flex: 1;
+        }
+
+        .bet-slip {
+            width: 300px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .bet-slip-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bet-slip-title h3 {
+            font-size: 1.2rem;
+        }
+
+        .bet-slip-item {
+            background: var(--darker);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .bet-slip-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .bet-remove {
+            color: var(--accent);
+            cursor: pointer;
+        }
+
+        .bet-input {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--dark);
+            border: 1px solid var(--gray);
+            border-radius: 8px;
+            color: var(--light);
+            margin-top: 0.5rem;
+        }
+
+        .bet-total {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bet-total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .bet-total-value {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Casino Page */
+        .casino-games {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            height: 300px;
+            perspective: 1000px;
+        }
+
+        .game-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .game-card:hover .game-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .game-card-front, .game-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .game-card-front {
+            background: var(--darker);
+        }
+
+        .game-card-back {
+            background: var(--dark);
+            transform: rotateY(180deg);
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .game-card h3 {
+            margin-bottom: 1rem;
+        }
+
+        /* Wallet Page */
+        .wallet-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .balance-card {
+            background: var(--gradient);
+            color: var(--darker);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--glow);
+            animation: pulse 3s infinite;
+        }
+
+        .balance-amount {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+
+        .wallet-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .wallet-action-btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            background: var(--card-bg);
+            border: none;
+            color: var(--light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .wallet-action-btn:hover {
+            background: var(--gradient);
+            color: var(--darker);
+            transform: translateY(-5px);
+        }
+
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .transaction-table th, .transaction-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .transaction-table th {
+            background: var(--darker);
+            font-weight: 600;
+        }
+
+        .transaction-table tr {
+            transition: all 0.3s ease;
+        }
+
+        .transaction-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status-completed {
+            color: var(--primary);
+        }
+
+        .status-pending {
+            color: var(--accent);
+        }
+
+        /* Support Page */
+        .support-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .faq-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem 0;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            color: var(--gray);
+        }
+
+        .faq-answer.active {
+            max-height: 200px;
+            margin-top: 1rem;
+        }
+
+        .contact-form {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: var(--darker);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+        }
+
+        .chat-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .chat-widget:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-widget i {
+            font-size: 1.5rem;
+            color: var(--darker);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 3rem 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 3px;
+            background: var(--gradient);
+            bottom: -8px;
+            left: 0;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: var(--gradient);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+        }
+
+        /* NEW: Auth Modal Styles */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .auth-modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .auth-container {
+            background: var(--darker);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .auth-header {
+            padding: 2rem;
+            text-align: center;
+            background: var(--gradient);
+            color: var(--darker);
+        }
+
+        .auth-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: var(--light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .auth-tab.active {
+            color: var(--primary);
+        }
+
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient);
+        }
+
+        .auth-content {
+            padding: 2rem;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+        }
+
+        .form-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--darker);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-group input {
+            margin-right: 0.8rem;
+            margin-top: 0.2rem;
+        }
+
+        .checkbox-group label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .checkbox-group a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .sports-layout {
+                flex-direction: column;
+            }
+            
+            .sports-sidebar, .bet-slip {
+                width: 100%;
+            }
+            
+            .support-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .nav-buttons {
+                display: none;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-hero {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .matches-container, .promotions-container, .casino-games {
+                grid-template-columns: 1fr;
+            }
+
+            .odds {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .odd-btn {
+                margin: 0;
+            }
+            
+            .wallet-actions {
+                flex-direction: column;
+            }
+            
+            .auth-container {
+                max-width: 100%;
+            }
+            
+            .auth-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="nav-container">
+            <div class="logo" onclick="showPage('home')">
+                <i class="fas fa-bolt"></i>
+                Snap Bet
+            </div>
+            
+            <nav class="nav-links">
+                <a class="active" onclick="showPage('home')">Home</a>
+                <a onclick="showPage('sports')">Sports</a>
+                <a onclick="showPage('live')">Live</a>
+                <a onclick="showPage('casino')">Casino</a>
+                <a onclick="showPage('promotions')">Promotions</a>
+                <a onclick="showPage('wallet')">Wallet</a>
+                <a onclick="showPage('support')">Support</a>
+            </nav>
+            
+            <div class="nav-buttons">
+                <button class="btn btn-login" onclick="showAuthModal('login')">Login</button>
+                <button class="btn btn-signup" onclick="showAuthModal('signup')">Sign Up</button>
+            </div>
+            
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <button class="close-modal" onclick="closeAuthModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="auth-header">
+                <h2>Join Snap Bet</h2>
+                <p>Bet smarter with our lightning-fast platform</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab" onclick="switchAuthTab('signup')">Sign Up</button>
+            </div>
+            
+            <div class="auth-content">
+                <!-- Login Form -->
+                <form class="auth-form active" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    
+                    <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="#" style="color: var(--primary); text-decoration: none;">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-signup" style="width: 100%;">Login</button>
+                    
+                    <div class="form-footer">
+                        <p>Don't have an account? <a onclick="switchAuthTab('signup')">Sign up</a></p>
+                    </div>
+                </form>
+                
+                <!-- Sign Up Form -->
+                <form class="auth-form" id="signupForm">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" class="form-control" placeholder="Create a password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupPhone">Phone Number</label>
+                        <input type="tel" id="signupPhone" class="form-control" placeholder="Enter your phone number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signupCountry">Country</label>
+                        <select id="signupCountry" class="form-control" required>
+                            <option value="">Select your country</option>
+                            <option value="us">United States</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="ca">Canada</option>
+                            <option value="au">Australia</option>
+                            <option value="de">Germany</option>
+                            <option value="fr">France</option>
+                            <option value="it">Italy</option>
+                            <option value="es">Spain</option>
+                        </select>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="promotions">
+                        <label for="promotions">I want to receive promotions and offers</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="ageVerification" required>
+                        <label for="ageVerification">I confirm that I am 18 years of age or older</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-signup" style="width: 100%;">Create Account</button>
+                    
+                    <div class="form-footer">
+                        <p>Already have an account? <a onclick="switchAuthTab('login')">Login</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <section id="home" class="page active">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <h1>Bet Smarter with Snap Bet ⚡</h1>
+                <p>Experience the fastest odds, live betting, and exclusive promotions in one sleek platform.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-hero btn-signup" onclick="showAuthModal('signup')">Join Now</button>
+                    <button class="btn btn-hero btn-login" onclick="showAuthModal('login')">Place a Bet</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Matches Section -->
+        <section class="section">
+            <h2 class="section-title">Featured Matches</h2>
+            <div class="matches-container">
+                <!-- Match Card 1 -->
+                <div class="match-card">
+                    <div class="teams">
+                        <div class="team">
+                            <div class="team-logo">MCI</div>
+                            <span>Man City</span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">LIV</div>
+                            <span>Liverpool</span>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <p>Premier League • Today • 15:00</p>
+                    </div>
+                    <div class="odds">
+                        <button class="odd-btn">1.85</button>
+                        <button class="odd-btn">3.40</button>
+                        <button class="odd-btn">4.20</button>
+                    </div>
+                </div>
+
+                <!-- Match Card 2 -->
+                <div class="match-card">
+                    <div class="teams">
+                        <div class="team">
+                            <div class="team-logo">RMA</div>
+                            <span>Real Madrid</span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">FCB</div>
+                            <span>Barcelona</span>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <p>La Liga • Tomorrow • 20:00</p>
+                    </div>
+                    <div class="odds">
+                        <button class="odd-btn">2.10</button>
+                        <button class="odd-btn">3.25</button>
+                        <button class="odd-btn">3.50</button>
+                    </div>
+                </div>
+
+                <!-- Match Card 3 -->
+                <div class="match-card">
+                    <div class="teams">
+                        <div class="team">
+                            <div class="team-logo">LAL</div>
+                            <span>Lakers</span>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">GSW</div>
+                            <span>Warriors</span>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <p>NBA • Today • 22:30</p>
+                    </div>
+                    <div class="odds">
+                        <button class="odd-btn">1.95</button>
+                        <button class="odd-btn">1.85</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Promotions Section -->
+        <section class="section">
+            <h2 class="section-title">Exclusive Promotions</h2>
+            <div class="promotions-container">
+                <!-- Promotion Card 1 -->
+                <div class="promo-card">
+                    <div class="promo-header">
+                        <h3>Welcome Bonus</h3>
+                        <span class="promo-badge">HOT</span>
+                    </div>
+                    <p>Get 100% bonus up to $500 on your first deposit. Use code: SNAP100</p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-value">02</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">12</div>
+                            <div class="countdown-label">HRS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">45</div>
+                            <div class="countdown-label">MINS</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-signup" style="width: 100%;" onclick="showAuthModal('signup')">Claim Now</button>
+                </div>
+
+                <!-- Promotion Card 2 -->
+                <div class="promo-card">
+                    <div class="promo-header">
+                        <h3>Free Bet Friday</h3>
+                        <span class="promo-badge">NEW</span>
+                    </div>
+                    <p>Place 5+ bets on Friday and get a $10 free bet. T&Cs apply.</p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-value">00</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">06</div>
+                            <div class="countdown-label">HRS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">30</div>
+                            <div class="countdown-label">MINS</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-signup" style="width: 100%;" onclick="showAuthModal('signup')">Learn More</button>
+                </div>
+
+                <!-- Promotion Card 3 -->
+                <div class="promo-card">
+                    <div class="promo-header">
+                        <h3>Acca Insurance</h3>
+                        <span class="promo-badge">POPULAR</span>
+                    </div>
+                    <p>Get your money back as a free bet if one leg lets you down on 5+ fold accumulators.</p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-value">07</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">15</div>
+                            <div class="countdown-label">HRS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">20</div>
+                            <div class="countdown-label">MINS</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-signup" style="width: 100%;" onclick="showAuthModal('signup')">Opt In</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Matches Section -->
+        <section class="section">
+            <h2 class="section-title">Live Matches</h2>
+            <table class="live-table">
+                <thead>
+                    <tr>
+                        <th>Match</th>
+                        <th>Time</th>
+                        <th>Score</th>
+                        <th>1</th>
+                        <th>X</th>
+                        <th>2</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="live-badge"><i class="fas fa-play" style="margin-right: 5px;"></i> LIVE</span>
+                            Chelsea vs Arsenal
+                        </td>
+                        <td>62'</td>
+                        <td>1 - 1</td>
+                        <td>2.45</td>
+                        <td>3.10</td>
+                        <td>2.80</td>
+                        <td><button class="odd-btn">Bet Now</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="live-badge"><i class="fas fa-play" style="margin-right: 5px;"></i> LIVE</span>
+                            PSG vs Marseille
+                        </td>
+                        <td>35'</td>
+                        <td>0 - 0</td>
+                        <td>1.75</td>
+                        <td>3.50</td>
+                        <td>4.25</td>
+                        <td><button class="odd-btn">Bet Now</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="live-badge"><i class="fas fa-play" style="margin-right: 5px;"></i> LIVE</span>
+                            Bayern vs Dortmund
+                        </td>
+                        <td>25'</td>
+                        <td>1 - 0</td>
+                        <td>1.60</td>
+                        <td>4.00</td>
+                        <td>5.00</td>
+                        <td><button class="odd-btn">Bet Now</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </section>
+
+    <!-- Sports Betting Page -->
+    <section id="sports" class="page">
+        <div class="sports-layout">
+            <div class="sports-sidebar">
+                <h3>Sports Categories</h3>
+                <ul class="sports-categories">
+                    <li class="active"><i class="fas fa-futbol"></i> Football</li>
+                    <li><i class="fas fa-basketball-ball"></i> Basketball</li>
+                    <li><i class="fas fa-baseball-ball"></i> Baseball</li>
+                    <li><i class="fas fa-hockey-puck"></i> Hockey</li>
+                    <li><i class="fas fa-table-tennis"></i> Tennis</li>
+                    <li><i class="fas fa-flag-checkered"></i> Motorsports</li>
+                    <li><i class="fas fa-golf-ball"></i> Golf</li>
+                    <li><i class="fas fa-fist-raised"></i> MMA</li>
+                </ul>
+            </div>
+            
+            <div class="sports-main">
+                <h2 class="section-title">Football Matches</h2>
+                <div class="matches-container">
+                    <!-- Repeat match cards from home page -->
+                    <div class="match-card">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">MCI</div>
+                                <span>Man City</span>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">LIV</div>
+                                <span>Liverpool</span>
+                            </div>
+                        </div>
+                        <div class="match-info">
+                            <p>Premier League • Today • 15:00</p>
+                        </div>
+                        <div class="odds">
+                            <button class="odd-btn">1.85</button>
+                            <button class="odd-btn">3.40</button>
+                            <button class="odd-btn">4.20</button>
+                        </div>
+                    </div>
+
+                    <div class="match-card">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">RMA</div>
+                                <span>Real Madrid</span>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">FCB</div>
+                                <span>Barcelona</span>
+                            </div>
+                        </div>
+                        <div class="match-info">
+                            <p>La Liga • Tomorrow • 20:00</p>
+                        </div>
+                        <div class="odds">
+                            <button class="odd-btn">2.10</button>
+                            <button class="odd-btn">3.25</button>
+                            <button class="odd-btn">3.50</button>
+                        </div>
+                    </div>
+
+                    <div class="match-card">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">JUV</div>
+                                <span>Juventus</span>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">MIL</div>
+                                <span>AC Milan</span>
+                            </div>
+                        </div>
+                        <div class="match-info">
+                            <p>Serie A • Today • 18:00</p>
+                        </div>
+                        <div class="odds">
+                            <button class="odd-btn">2.30</button>
+                            <button class="odd-btn">3.10</button>
+                            <button class="odd-btn">3.20</button>
+                        </div>
+                    </div>
+
+                    <div class="match-card">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">PSG</div>
+                                <span>PSG</span>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">OL</div>
+                                <span>Lyon</span>
+                            </div>
+                        </div>
+                        <div class="match-info">
+                            <p>Ligue 1 • Tomorrow • 20:45</p>
+                        </div>
+                        <div class="odds">
+                            <button class="odd-btn">1.45</button>
+                            <button class="odd-btn">4.20</button>
+                            <button class="odd-btn">7.50</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bet-slip">
+                <div class="bet-slip-title">
+                    <h3>Bet Slip</h3>
+                    <span>0 bets</span>
+                </div>
+                <div class="bet-slip-content">
+                    <p>Add selections to your bet slip</p>
+                    <div class="bet-slip-items">
+                        <!-- Bets will appear here -->
+                    </div>
+                    <div class="bet-input-group">
+                        <input type="text" class="bet-input" placeholder="Stake Amount">
+                    </div>
+                    <div class="bet-total">
+                        <div class="bet-total-row">
+                            <span>Total Stake:</span>
+                            <span class="bet-total-value">$0.00</span>
+                        </div>
+                        <div class="bet-total-row">
+                            <span>Potential Win:</span>
+                            <span class="bet-total-value">$0.00</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-signup" style="width: 100%; margin-top: 1rem;">Place Bet</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Betting Page -->
+    <section id="live" class="page">
+        <div class="section">
+            <h2 class="section-title">Live Betting</h2>
+            <table class="live-table">
+                <thead>
+                    <tr>
+                        <th>Match</th>
+                        <th>Time</th>
+                        <th>Score</th>
+                        <th>1</th>
+                        <th>X</th>
+                        <th>2</th>
+                        <th>Over 2.5</th>
+                        <th>Under 2.5</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="live-badge"><i class="fas fa-play" style="margin-right: 5px;"></i> LIVE</span>
+                            Chelsea vs Arsenal
+                        </td>
+                        <td>62'</td>
+                        <td>1 - 1</td>
+                        <td>2.45</td>
+                        <td>3.10</td>
+                        <td>2.80</td>
+                        <td>1.90</td>
+                        <td>1.85</td>
+                        <td><button class="odd-btn">Bet Now</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="live-badge"><i class="fas fa-play" style="margin-right: 5px;"></i> LIVE</span>
+                            PSG vs Marseille
+                        </td>
+                        <td>35'</td>
+                        <td>0 - 0</td>
+                        <td>1.75</td>
+                        <td>3.50</td>
+                        <td>4.25</td>
+                        <td>2.10</td>
+                        <td>1.70</td>
+                        <td><button class="odd-btn">Bet Now</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="live-badge"><i class="fas fa-play" style="margin-right: 5px;"></i> LIVE</span>
+                            Bayern vs Dortmund
+                        </td>
+                        <td>25'</td>
+                        <td>1 - 0</td>
+                        <td>1.60</td>
+                        <td>4.00</td>
+                        <td>5.00</td>
+                        <td>1.95</td>
+                        <td>1.80</td>
+                        <td><button class="odd-btn">Bet Now</button></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="live-badge"><i class="fas fa-play" style="margin-right: 5px;"></i> LIVE</span>
+                            Lakers vs Warriors
+                        </td>
+                        <td>Q3</td>
+                        <td>78 - 82</td>
+                        <td>2.10</td>
+                        <td>-</td>
+                        <td>1.75</td>
+                        <td>1.90</td>
+                        <td>1.85</td>
+                        <td><button class="odd-btn">Bet Now</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Casino Page -->
+    <section id="casino" class="page">
+        <div class="section">
+            <h2 class="section-title">Casino Games</h2>
+            <div class="casino-games">
+                <div class="game-card">
+                    <div class="game-card-inner">
+                        <div class="game-card-front">
+                            <div class="game-icon">
+                                <i class="fas fa-dice"></i>
+                            </div>
+                            <h3>Slots</h3>
+                            <p>Try your luck with our exciting slot machines</p>
+                        </div>
+                        <div class="game-card-back">
+                            <h3>Slots</h3>
+                            <p>Over 200 different slot games with progressive jackpots</p>
+                            <button class="btn btn-signup" style="margin-top: 1rem;">Play Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-card-inner">
+                        <div class="game-card-front">
+                            <div class="game-icon">
+                                <i class="fas fa-chess-queen"></i>
+                            </div>
+                            <h3>Blackjack</h3>
+                            <p>Classic card game with live dealers</p>
+                        </div>
+                        <div class="game-card-back">
+                            <h3>Blackjack</h3>
+                            <p>Multiple blackjack tables with different limits</p>
+                            <button class="btn btn-signup" style="margin-top: 1rem;">Play Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-card-inner">
+                        <div class="game-card-front">
+                            <div class="game-icon">
+                                <i class="fas fa-roulette-wheel"></i>
+                            </div>
+                            <h3>Roulette</h3>
+                            <p>Spin the wheel and test your luck</p>
+                        </div>
+                        <div class="game-card-back">
+                            <h3>Roulette</h3>
+                            <p>European, American and French roulette variants</p>
+                            <button class="btn btn-signup" style="margin-top: 1rem;">Play Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-card-inner">
+                        <div class="game-card-front">
+                            <div class="game-icon">
+                                <i class="fas fa-poker-chip"></i>
+                            </div>
+                            <h3>Poker</h3>
+                            <p>Texas Hold'em and other poker variants</p>
+                        </div>
+                        <div class="game-card-back">
+                            <h3>Poker</h3>
+                            <p>Tournaments and cash games available 24/7</p>
+                            <button class="btn btn-signup" style="margin-top: 1rem;">Play Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-card-inner">
+                        <div class="game-card-front">
+                            <div class="game-icon">
+                                <i class="fas fa-dice-d20"></i>
+                            </div>
+                            <h3>Live Casino</h3>
+                            <p>Real dealers in real time</p>
+                        </div>
+                        <div class="game-card-back">
+                            <h3>Live Casino</h3>
+                            <p>Interactive games with professional dealers</p>
+                            <button class="btn btn-signup" style="margin-top: 1rem;">Play Now</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-card">
+                    <div class="game-card-inner">
+                        <div class="game-card-front">
+                            <div class="game-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <h3>Baccarat</h3>
+                            <p>Elegant card game of chance</p>
+                        </div>
+                        <div class="game-card-back">
+                            <h3>Baccarat</h3>
+                            <p>Multiple tables with different betting limits</p>
+                            <button class="btn btn-signup" style="margin-top: 1rem;">Play Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promotions Page -->
+    <section id="promotions" class="page">
+        <div class="section">
+            <h2 class="section-title">Exclusive Promotions</h2>
+            <div class="promotions-container">
+                <!-- Promotion Card 1 with Footballer Image -->
+                <div class="promo-card promo-card-image" style="background-image: url('https://images.unsplash.com/photo-1598808503746-f34c53b9323e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');">
+                    <div class="promo-header">
+                        <h3>Welcome Bonus</h3>
+                        <span class="promo-badge">HOT</span>
+                    </div>
+                    <p>Get 100% bonus up to $500 on your first deposit. Use code: SNAP100</p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-value">02</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">12</div>
+                            <div class="countdown-label">HRS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">45</div>
+                            <div class="countdown-label">MINS</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-signup" style="width: 100%;" onclick="showAuthModal('signup')">Claim Now</button>
+                </div>
+
+                <!-- Promotion Card 2 with Footballer Image -->
+                <div class="promo-card promo-card-image" style="background-image: url('https://images.unsplash.com/photo-1575361204480-aadea25e6e68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80');">
+                    <div class="promo-header">
+                        <h3>Free Bet Friday</h3>
+                        <span class="promo-badge">NEW</span>
+                    </div>
+                    <p>Place 5+ bets on Friday and get a $10 free bet. T&Cs apply.</p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-value">00</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">06</div>
+                            <div class="countdown-label">HRS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">30</div>
+                            <div class="countdown-label">MINS</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-signup" style="width: 100%;" onclick="showAuthModal('signup')">Learn More</button>
+                </div>
+
+                <!-- Promotion Card 3 with Footballer Image -->
+                <div class="promo-card promo-card-image" style="background-image: url('https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80');">
+                    <div class="promo-header">
+                        <h3>Acca Insurance</h3>
+                        <span class="promo-badge">POPULAR</span>
+                    </div>
+                    <p>Get your money back as a free bet if one leg lets you down on 5+ fold accumulators.</p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-value">07</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">15</div>
+                            <div class="countdown-label">HRS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">20</div>
+                            <div class="countdown-label">MINS</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-signup" style="width: 100%;" onclick="showAuthModal('signup')">Opt In</button>
+                </div>
+
+                <!-- Promotion Card 4 with Footballer Image -->
+                <div class="promo-card promo-card-image" style="background-image: url('https://images.unsplash.com/photo-1577223625819-68c6c7455c7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80');">
+                    <div class="promo-header">
+                        <h3>Cashback Offer</h3>
+                        <span class="promo-badge">EXCLUSIVE</span>
+                    </div>
+                    <p>Get 10% cashback on all your losses every Monday. Up to $100 per week.</p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-value">01</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">08</div>
+                            <div class="countdown-label">HRS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">15</div>
+                            <div class="countdown-label">MINS</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-signup" style="width: 100%;" onclick="showAuthModal('signup')">Activate</button>
+                </div>
+
+                <!-- Promotion Card 5 with Footballer Image -->
+                <div class="promo-card promo-card-image" style="background-image: url('https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80');">
+                    <div class="promo-header">
+                        <h3>Deposit Bonus</h3>
+                        <span class="promo-badge">LIMITED</span>
+                    </div>
+                    <p>Deposit $50 or more and get a $25 free bet instantly. No code needed.</p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-value">05</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">10</div>
+                            <div class="countdown-label">HRS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">25</div>
+                            <div class="countdown-label">MINS</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-signup" style="width: 100%;" onclick="showAuthModal('signup')">Get Bonus</button>
+                </div>
+
+                <!-- Promotion Card 6 with Footballer Image -->
+                <div class="promo-card promo-card-image" style="background-image: url('https://images.unsplash.com/photo-1577223625819-68c6c7455c7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80');">
+                    <div class="promo-header">
+                        <h3>Refer a Friend</h3>
+                        <span class="promo-badge">BEST</span>
+                    </div>
+                    <p>Refer a friend and both get $50 free bet when they deposit $50.</p>
+                    <div class="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-value">30</div>
+                            <div class="countdown-label">DAYS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">23</div>
+                            <div class="countdown-label">HRS</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-value">59</div>
+                            <div class="countdown-label">MINS</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-signup" style="width: 100%;" onclick="showAuthModal('signup')">Refer Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wallet Page -->
+    <section id="wallet" class="page">
+        <div class="section">
+            <h2 class="section-title">My Wallet</h2>
+            <div class="wallet-container">
+                <div class="balance-card">
+                    <h3>Available Balance</h3>
+                    <div class="balance-amount">$1,250.75</div>
+                    <p>Last updated: Just now</p>
+                </div>
+                
+                <div class="wallet-actions">
+                    <button class="wallet-action-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        Deposit
+                    </button>
+                    <button class="wallet-action-btn">
+                        <i class="fas fa-minus-circle"></i>
+                        Withdraw
+                    </button>
+                    <button class="wallet-action-btn">
+                        <i class="fas fa-exchange-alt"></i>
+                        Transfer
+                    </button>
+                    <button class="wallet-action-btn">
+                        <i class="fas fa-history"></i>
+                        History
+                    </button>
+                </div>
+                
+                <h3 style="margin-bottom: 1.5rem;">Recent Transactions</h3>
+                <table class="transaction-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2023-10-15</td>
+                            <td>Deposit via Credit Card</td>
+                            <td>+$500.00</td>
+                            <td class="status-completed">Completed</td>
+                        </tr>
+                        <tr>
+                            <td>2023-10-14</td>
+                            <td>Bet Placed: Man City vs Liverpool</td>
+                            <td>-$50.00</td>
+                            <td class="status-completed">Settled</td>
+                        </tr>
+                        <tr>
+                            <td>2023-10-13</td>
+                            <td>Withdrawal to Bank Account</td>
+                            <td>-$200.00</td>
+                            <td class="status-pending">Pending</td>
+                        </tr>
+                        <tr>
+                            <td>2023-10-12</td>
+                            <td>Bet Won: Real Madrid vs Barcelona</td>
+                            <td>+$125.50</td>
+                            <td class="status-completed">Completed</td>
+                        </tr>
+                        <tr>
+                            <td>2023-10-11</td>
+                            <td>Welcome Bonus</td>
+                            <td>+$50.00</td>
+                            <td class="status-completed">Credited</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Page -->
+    <section id="support" class="page">
+        <div class="support-container">
+            <div class="faq-section">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How do I create an account?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Click on the "Sign Up" button in the top right corner, fill in your details, verify your email, and you're ready to start betting!</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What payment methods do you accept?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We accept credit/debit cards, bank transfers, e-wallets like PayPal, Skrill, and Neteller, as well as various cryptocurrency options.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How long do withdrawals take?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Withdrawal processing times vary by method: e-wallets are usually instant, cards take 1-3 business days, and bank transfers 3-5 business days.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Is my personal information secure?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we use industry-standard encryption and security measures to protect your personal and financial information at all times.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How can I set deposit limits?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can set deposit limits in your Account Settings under the "Responsible Gaming" section. Limits can be daily, weekly, or monthly.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contact-form">
+                <h2 class="section-title">Contact Us</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" class="form-control" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" class="form-control">
+                            <option value="">Select a subject</option>
+                            <option value="account">Account Issues</option>
+                            <option value="payment">Payment Problems</option>
+                            <option value="betting">Betting Questions</option>
+                            <option value="technical">Technical Support</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" class="form-control" rows="5" placeholder="Describe your issue or question"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-signup" style="width: 100%;">Send Message</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Live Chat Widget -->
+        <div class="chat-widget">
+            <i class="fas fa-comments"></i>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Snap Bet</h3>
+                <p>Experience the future of betting with our lightning-fast platform, live odds, and exclusive promotions.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a onclick="showPage('home')">Home</a></li>
+                    <li><a onclick="showPage('sports')">Sports</a></li>
+                    <li><a onclick="showPage('live')">Live Betting</a></li>
+                    <li><a onclick="showPage('casino')">Casino</a></li>
+                    <li><a onclick="showPage('promotions')">Promotions</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a onclick="showPage('support')">Contact Us</a></li>
+                    <li><a href="#">Responsible Gaming</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Legal</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Licensing</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 Snap Bet. All rights reserved. | 18+ Please gamble responsibly.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Find and activate the corresponding nav link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                if (link.textContent.toLowerCase().includes(pageId.toLowerCase()) || 
+                    (pageId === 'home' && link.textContent === 'Home')) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Navbar scroll effect
+        let lastScrollTop = 0;
+        const header = document.getElementById('header');
+        
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                header.classList.add('hidden');
+            } else {
+                header.classList.remove('hidden');
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+
+        // FAQ accordion functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                answer.classList.toggle('active');
+                
+                const icon = question.querySelector('i');
+                if (answer.classList.contains('active')) {
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                } else {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            });
+        });
+
+        // Simple countdown timer for promotions
+        function updateCountdown() {
+            const countdownItems = document.querySelectorAll('.countdown-value');
+            
+            // This is a simplified version - in a real app you would calculate actual time differences
+            countdownItems.forEach(item => {
+                let value = parseInt(item.textContent);
+                if (value > 0) {
+                    item.textContent = value < 10 ? '0' + (value - 1) : (value - 1);
+                } else {
+                    item.textContent = '00';
+                }
+            });
+        }
+        
+        // Update countdown every minute
+        setInterval(updateCountdown, 60000);
+
+        // Bet slip functionality (simplified)
+        document.querySelectorAll('.odd-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // In a real app, this would add the selection to the bet slip
+                alert('Selection added to bet slip!');
+            });
+        });
+
+        // Mobile menu toggle (placeholder)
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            alert('Mobile menu would open here');
+        });
+
+        // NEW: Auth Modal Functionality
+        function showAuthModal(formType) {
+            const modal = document.getElementById('authModal');
+            modal.classList.add('active');
+            switchAuthTab(formType);
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('authModal');
+            modal.classList.remove('active');
+        }
+
+        function switchAuthTab(tab) {
+            // Update tabs
+            document.querySelectorAll('.auth-tab').forEach(tabElement => {
+                tabElement.classList.remove('active');
+            });
+            document.querySelectorAll('.auth-tab').forEach(tabElement => {
+                if (tabElement.textContent.toLowerCase().includes(tab)) {
+                    tabElement.classList.add('active');
+                }
+            });
+
+            // Update forms
+            document.querySelectorAll('.auth-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(tab + 'Form').classList.add('active');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('authModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAuthModal();
+            }
+        });
+
+        // Form submission handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // In a real app, you would handle login here
+            alert('Login functionality would be implemented here');
+            closeAuthModal();
+        });
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // In a real app, you would handle signup here
+            alert('Signup functionality would be implemented here');
+            closeAuthModal();
+        });
+    </script>
+</body>
+</html>
